@@ -26,10 +26,14 @@ jobs:
           az acr login --name zeropaperacr
 
       - name: Build and tag the Docker image
+        env:
+          TIMESTAMP: ${{ github.run_id }}-${{ github.run_number }}
         run: |
           docker build . --file app/Dockerfile --tag zeropaperacr.azurecr.io/dev:${{ env.TIMESTAMP }}
 
       - name: Push the Docker image to ACR
+        env:
+          TIMESTAMP: ${{ github.run_id }}-${{ github.run_number }}
         run: |
           docker push zeropaperacr.azurecr.io/dev:${{ env.TIMESTAMP }}
 
