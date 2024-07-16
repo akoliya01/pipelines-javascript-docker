@@ -29,11 +29,11 @@ jobs:
         env:
           TIMESTAMP: ${{ github.run_id }}-${{ github.run_number }}
         run: |
-          docker build . --file app/Dockerfile --tag zeropaperacr.azurecr.io/dev:${{ env.TIMESTAMP }}
+          docker build . --file app/Dockerfile --tag zeropaperacr.azurecr.io/dev-build:${{ env.TIMESTAMP }}
 
       - name: Push the Docker image to ACR
         env:
           TIMESTAMP: ${{ github.run_id }}-${{ github.run_number }}
         run: |
-          docker push zeropaperacr.azurecr.io/dev:${{ env.TIMESTAMP }}
+          docker push zeropaperacr.azurecr.io/dev-build:${{ env.TIMESTAMP }}
 
