@@ -7,13 +7,29 @@ on:
     branches: [ "main" ]
 
 jobs:
-
-  build:
-
+  build-and-push:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Build the Docker image
-      run: docker build . --file app/Dockerfile --tag latest:$(date +%s)
-    
+      - uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Log in to Azure Container Registry
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Azure Container Registry Docker login
+        run: |
+          az acr login --name zeropaperacr
+
+      - name: Build and tag the Docker image
+        run: |
+          docker build . --file app/Dockerfile --tag zeropaperacr.azurecr.io/dev:latest
+
+      - name: Push the Docker image to ACR
+        run: |
+          docker push zeropaperacr.azurecr.io/dev:latest
+
